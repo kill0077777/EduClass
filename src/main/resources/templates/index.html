@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title="홈">EduClass - 온라인 강의 플랫폼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Apple SD Gothic Neo', '맑은 고딕', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 12px 30px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Content Section */
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2b3777;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        /* Notices Section */
+        .notices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .notice-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notice-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .notice-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .notice-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2b3777;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .notice-content {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .notice-date {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        /* Lectures Section */
+        .lectures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .lecture-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lecture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .lecture-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: white;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .lecture-category {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            width: fit-content;
+        }
+
+        .lecture-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .lecture-body {
+            padding: 20px;
+        }
+
+        .lecture-instructor {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .lecture-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .lecture-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .lecture-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .lecture-price.free {
+            color: #13aa56;
+        }
+
+        .lecture-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .lecture-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-text {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-section p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+
+            .notices-grid,
+            .lectures-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>🎓 EduClass</h1>
+        <p>전문가의 강의로 새로운 기술을 배우고 성장하세요</p>
+        <div class="hero-buttons">
+            <a th:href="@{/lecture/list}" class="btn-primary">강의 둘러보기</a>
+            <a th:href="@{/notice/list}" class="btn-secondary">공지사항 보기</a>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-number" th:text="${lectureCount ?: 0}">0</div>
+            <div class="stat-label">총 강의</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📢</div>
+            <div class="stat-number" th:text="${noticeCount ?: 0}">0</div>
+            <div class="stat-label">공지사항</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-number">4.8</div>
+            <div class="stat-label">평균 평점</div>
+        </div>
+    </div>
+
+    <!-- Notices Section -->
+    <div class="content-section" th:if="${notices != null && notices.size() > 0}">
+        <h2 class="section-title">📢 최신 공지사항</h2>
+        <div class="notices-grid">
+            <div th:each="notice : ${notices.stream().limit(3).toList()}" class="notice-card" 
+                 onclick="location.href=this.getAttribute('data-href');" th:attr="data-href=@{/notice/detail/{id}(id=${notice.noticeId})}">
+                <span class="notice-badge" th:if="${notice.fixedFlag}">공지</span>
+                <h3 class="notice-title" th:text="${notice.title}">공지 제목</h3>
+                <p class="notice-content" th:text="${notice.content}">공지 내용</p>
+                <span class="notice-date" th:text="${#temporals.format(notice.regDate, 'yyyy-MM-dd')}">2026-01-01</span>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <a th:href="@{/notice/list}" class="btn-primary" style="padding: 10px 25px;">모든 공지사항 보기</a>
+        </div>
+    </div>
+
+    <!-- Lectures Section -->
+    <div class="content-section" th:if="${lectures != null && lectures.size() > 0}">
+        <h2 class="section-title">📚 인기 강의</h2>
+        <div class="lectures-grid">
+            <div th:each="lecture : ${lectures.stream().limit(6).toList()}" class="lecture-card"
+                 onclick="location.href=this.getAttribute('data-href');" th:attr="data-href=@{/lecture/detail/{id}(id=${lecture.lectureId})}">
+                <div class="lecture-header">
+                    <span class="lecture-category" th:text="${lecture.category ?: '기타'}">카테고리</span>
+                    <h3 class="lecture-title" th:text="${lecture.title}">강의 제목</h3>
+                </div>
+                <div class="lecture-body">
+                    <div class="lecture-instructor" th:text="${'강사: ' + (lecture.instructor?.name ?: '미지정')}">강사: 미지정</div>
+                    <p class="lecture-description" th:text="${lecture.description}">강의 설명</p>
+                    <div class="lecture-footer">
+                        <span class="lecture-price" th:if="${lecture.price > 0}" th:text="${#numbers.formatInteger(lecture.price, 3, 'COMMA')} + '원'">0원</span>
+                        <span class="lecture-price free" th:if="${lecture.price == 0}">무료</span>
+                        <a th:href="@{/lecture/detail/{id}(id=${lecture.lectureId})}" class="lecture-link">자세히 보기 →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px;">
+            <a th:href="@{/lecture/list}" class="btn-primary" style="padding: 12px 30px; font-size: 1.05rem;">모든 강의 보기</a>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${lectures == null || lectures.size() == 0}" class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <p class="empty-state-text">아직 등록된 강의가 없습니다.</p>
+        <p style="margin-top: 10px; color: #ccc;">곧 다양한 강의가 추가될 예정입니다.</p>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script>
+        // 페이지 로드 시 통계 데이터 표시
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('EduClass 홈페이지 로드됨');
+        });
+    </script>
+</th:block>
+</body>
+</html>

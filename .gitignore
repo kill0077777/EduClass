@@ -1,0 +1,44 @@
+# Gradle
+.gradle/
+build/
+*.jar
+*.war
+*.rar
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.h2.db
+*.mv.db
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+temp/
+*.tmp
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+
+# Node (if any frontend)
+node_modules/
+npm-debug.log
